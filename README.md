@@ -2,6 +2,8 @@
 
 ## Lightweight Camera Stream Health Monitoring Microservice
 
+<img width="1248" height="832" alt="banner" src="https://github.com/user-attachments/assets/337f7b48-75aa-40e5-840d-369170e113ac" />
+
 ### Overview
 
 **StreamPulse** is a minimal Python-based microservice for monitoring the operational health of heterogeneous IP camera networks.
