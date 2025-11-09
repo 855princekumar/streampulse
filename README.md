@@ -130,10 +130,10 @@ docker run -d -p 8000:8000 -v $(pwd)/data:/data devprincekumar/streampulse:1.1
 
 Once the container is running, open:
 ```
-👉 [http://localhost:8000](http://localhost:8000)
+ [http://localhost:8000](http://localhost:8000)
 ```
 
-## ⚙️ Docker Compose Deployment
+##  Docker Compose Deployment
 
 You can also deploy using **Docker Compose** for easier management:
 
@@ -158,6 +158,27 @@ This ensures that all settings, logs, and stream configurations remain intact ac
 - **URL:** [http://localhost:8000](http://localhost:8000)  
 - **Default Credentials:** `admin / admin123`
 
+---
+
+###  Test Streams (for First-Time Users)
+
+If you don’t have your own camera setup yet, you can easily test StreamPulse with publicly available live streams.
+
+A great source for open camera feeds:  
+🔗 [Insecam – Public IP Cameras Directory](http://www.insecam.org/en/byrating/#google_vignette)
+
+You can copy any **RTSP** or **MJPEG** URL from that site and add it in your `config.yaml` or through the web GUI.
+
+**Example entry in `config.yaml`:**
+```yaml
+streams:
+  - name: TestCam
+    url: http://91.191.213.49:8081/mjpg/video.mjpg
+```
+
+Once added, restart StreamPulse or reload the dashboard — you’ll see the camera’s health status live in the GUI.
+
+### Note: These streams are publicly shared by their operators. You can use them responsibly and for testing purposes only.
 ---
 
 ## Technical Notes
