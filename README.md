@@ -66,11 +66,13 @@ StreamPulse provides a lightweight, hardware-agnostic alternative that records t
 ```
 ---
 
-### GUI Snippets
+### 🔢 Version Map
 
-<img width="1282" height="535" alt="image" src="https://github.com/user-attachments/assets/a327f9e1-3246-4657-8f6e-d546bddf3008" />
-<img width="1522" height="518" alt="image" src="https://github.com/user-attachments/assets/33b8cae4-7a3e-4de7-9a5e-972860ed6ee3" />
-<img width="763" height="786" alt="image" src="https://github.com/user-attachments/assets/251508b5-9075-4931-9ef0-199c80189154" />
+| Version | Folder | Description |
+|----------|---------|-------------|
+| v2.0 | [`version-2/`](./version-2) | Latest stable build with async engine and improved GUI |
+| v1.1 | [`version-1/`](./version-1/) | First GUI-based microservice (Docker supported) |
+| v0.5 | [`legacy_prototypes/`](./legacy-prototypes) | Early standalone scripts and research prototypes |
 
 ---
 
