@@ -118,8 +118,54 @@ Open [http://localhost:8000](http://localhost:8000) in your browser.
 
 ---
 
-### Technical Notes
+### 🐳 Manual Docker Deployment
 
+To pull and run the container manually:
+
+```bash
+docker pull devprincekumar/streampulse:1.1
+
+docker run -d -p 8000:8000 -v $(pwd)/data:/data devprincekumar/streampulse:1.1
+```
+
+Once the container is running, open:
+```
+👉 [http://localhost:8000](http://localhost:8000)
+```
+
+## ⚙️ Docker Compose Deployment
+
+You can also deploy using **Docker Compose** for easier management:
+
+```bash
+docker compose up -d
+```
+
+This will automatically start the **StreamPulse** web GUI and monitoring services.
+
+---
+
+##  Persistent Data Storage
+
+All persistent data — including configuration files (`config.yaml`) and the SQLite database (`streams.db`) — are stored in the local `data/` folder on the host system.
+
+This ensures that all settings, logs, and stream configurations remain intact across container restarts or image updates.
+
+---
+
+##  Default Access
+
+- **URL:** [http://localhost:8000](http://localhost:8000)  
+- **Default Credentials:** `admin / admin123`
+
+---
+
+## Technical Notes
+
+- Image: `devprincekumar/streampulse:1.1`  
+- Built with Python 3.11 and Flask  
+- Includes sample stream for first-run testing  
+- Lightweight — suitable for Raspberry Pi or edge devices  
 - Each stream has a dedicated log table within `streams.db`.  
 - Logs are timestamped using NTP-synchronized UTC time and mapped to the configured timezone.  
 - Designed to run continuously on low-power devices.  
