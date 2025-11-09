@@ -1,0 +1,10 @@
+version: '3'
+services:
+  streampulse:
+    image: devprincekumar/streampulse:1.1
+    container_name: streampulse
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/data
