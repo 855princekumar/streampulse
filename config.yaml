@@ -1,7 +1,5 @@
 heartbeat_seconds: 30
 streams:
-- name: IoTLab-Gate
-  url: rtsp://iotlab-1:node@123@192.168.1.1:554/stream2
-- name: labcam1
-  url: http://192.168.1.1:9081
+- name: Testing streams
+  url: http://158.58.130.148/mjpg/video.mjpg
 
