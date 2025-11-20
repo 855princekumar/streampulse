@@ -1,43 +1,7 @@
 heartbeat_seconds: 15
 timezone: Asia/Kolkata
 streams:
-- name: IoTLab-Gate
-  url: rtsp://iotlab-1:node%40123@10.1.60.76:554/stream2
-- name: MS-Stage
-  url: rtsp://ms-stage:node@123@10.1.60.72:554/stream2
-- name: IoTLab-SideView
-  url: rtsp://iotlab-0:node@123@10.1.60.60:554/stream2
-- name: Plaksha-Gate-1
-  url: rtsp://gate-1:node@123@10.1.59.21:554/stream2
-- name: MS-Gate-in
-  url: rtsp://ms-gate-in:node@123@10.1.60.74:554/stream2
-- name: LabCam1
-  url: http://10.1.62.165:9081
-- name: LabCam3
-  url: http://10.1.58.217:9081
-- name: LabCam4
-  url: http://10.1.59.33:9081
-- name: LabCam5
-  url: http://10.1.59.72:9081
-- name: LabCam6
-  url: http://10.1.60.103:9081
-- name: LabCam2
-  url: http://10.1.56.128:9081
-- name: D1
-  url: rtsp://admin:abcde%4012@10.1.40.42:554/Streaming/channels/102
-- name: D2
-  url: rtsp://admin:abcde%4012@10.1.40.34:554/Streaming/channels/102
-- name: D3
-  url: rtsp://admin:abcde%4012@10.1.40.35:554/Streaming/channels/102
-- name: D4
-  url: rtsp://admin:abcde%4012@10.1.40.36:554/Streaming/channels/102
-- name: D5
-  url: rtsp://admin:abcde%4012@10.1.40.37:554/Streaming/channels/102
-- name: D6
-  url: rtsp://admin:abcde%4012@10.1.40.38:554/Streaming/channels/102
-- name: D7
-  url: rtsp://admin:abcde%4012@10.1.40.39:554/Streaming/channels/102
-- name: D8
-  url: rtsp://admin:abcde%4012@10.1.40.40:554/Streaming/channels/102
-- name: D9
-  url: rtsp://admin:abcde%4012@10.1.40.41:554/Streaming/channels/102
+- name: 
+  url: 
+
+
