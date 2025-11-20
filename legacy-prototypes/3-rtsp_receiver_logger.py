@@ -10,7 +10,7 @@ import re
 import csv
 
 # Config
-STREAM_URL = "rtsp://10.1.56.88:554/stream"
+STREAM_URL = "rtsp://192.168.1.1:554/stream"
 LOG_DIR = os.path.join(os.getcwd(), "rtsp_receiver_logs")
 CSV_FILE = os.path.join(LOG_DIR, "frame_stats.csv")
 VIDEO_CHUNK_DURATION = 5  # in seconds
