@@ -6,18 +6,11 @@ import threading
 
 # --- CONFIGURATION ---
 cameras = {
-    "D1": {"ip": "10.1.40.34", "rtsp": "rtsp://admin:abcde@12@10.1.40.34:554/Streaming/channels/102", "note": "Wiring issue"},
-    "D2": {"ip": "10.1.40.35", "rtsp": "rtsp://admin:abcde@12@10.1.40.35:554/Streaming/channels/102", "note": ""},
-    "D3": {"ip": "10.1.40.36", "rtsp": "rtsp://admin:abcde@12@10.1.40.36:554/Streaming/channels/102", "note": ""},
-    "D4": {"ip": "10.1.40.37", "rtsp": "rtsp://admin:abcde@12@10.1.40.37:554/Streaming/channels/102", "note": ""},
-    "D5": {"ip": "10.1.40.38", "rtsp": "rtsp://admin:abcde@12@10.1.40.38:554/Streaming/channels/102", "note": ""},
-    "D6": {"ip": "10.1.40.39", "rtsp": "rtsp://admin:abcde@12@10.1.40.39:554/Streaming/channels/102", "note": "Wiring issue"},
-    "D7": {"ip": "10.1.40.40", "rtsp": "rtsp://admin:abcde@12@10.1.40.40:554/Streaming/channels/102", "note": ""},
-    "D8": {"ip": "10.1.40.41", "rtsp": "rtsp://admin:abcde@12@10.1.40.41:554/Streaming/channels/102", "note": "Wiring issue"},
-    "D9": {"ip": "10.1.40.42", "rtsp": "rtsp://admin:abcde@12@10.1.40.42:554/Streaming/channels/102", "note": "Wiring issue"}
+    "D1": {"ip": "192.168.1.1", "rtsp": "rtsp://admin:abcde@12@192.168.1.1:554/Streaming/channels/102", "note": "Wiring issue"},
+    "D2": {"ip": "192.168.1.1", "rtsp": "rtsp://admin:abcde@12@192.168.1.1:554/Streaming/channels/102", "note": ""},
 }
 
-network_label = "IoT-LAB"
+network_label = "wifi-network"
 test_duration = 30  # seconds for sample test
 fetch_interval = 10
 retry_attempts = 2
@@ -78,3 +71,4 @@ while time.time() - start_time < test_duration:
     time.sleep(fetch_interval)
 
 print("Parallel RTSP audit completed. Individual CSV logs generated for each camera.")
+
