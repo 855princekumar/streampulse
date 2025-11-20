@@ -11,7 +11,7 @@ import logging
 STREAM_FPS = 25
 RESOLUTION = "640x480"
 BITRATE = "1M"
-STREAM_URL = "rtsp://10.1.59.128:554/stream"
+STREAM_URL = "rtsp://192.168.1.1:554/stream"
 VIDEO_DEVICE = "/dev/video0"
 LOG_DIR = os.path.join(os.getcwd(), "rtsp_sender_logs")
 NTP_SERVER = "pool.ntp.org"
