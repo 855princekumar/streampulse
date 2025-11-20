@@ -13,7 +13,7 @@ import threading
 import shutil
 
 # Configuration
-STREAM_URL = "http://10.1.40.2:9081"  # MotionEye HTTP stream URL
+STREAM_URL = "http://192.168.1.1:9081"  # MotionEye HTTP stream URL
 LOG_FOLDER = os.path.join(os.getcwd(), "motioneye_receiver")
 VIDEO_CHUNK_DURATION = 5  # in seconds
 NTP_SERVER = "pool.ntp.org"
@@ -104,3 +104,4 @@ if __name__ == '__main__':
     stats_thread = threading.Thread(target=log_system_stats, daemon=True)
     stats_thread.start()
     receive_stream()
+
