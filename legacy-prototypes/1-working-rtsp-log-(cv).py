@@ -27,7 +27,7 @@ if missing:
 # -------------------- DB Config --------------------
 DB_HOST = "localhost"
 DB_USER = "admin"
-DB_PASSWORD = "node@123"
+DB_PASSWORD = "admin"
 DB_NAME = "rtsp_logs"
 TABLE_NAME = "camera_logs"
 
@@ -39,7 +39,7 @@ CAMERA_IPS = [
 
 RTSP_CREDENTIALS = [
     ("rtsp_user", "rtspUser123"),
-    ("admin", "abcde@12")
+    ("admin", "admin123")
 ]
 
 import cv2
@@ -116,4 +116,5 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
+
         print("Monitoring stopped.")
