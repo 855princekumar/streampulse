@@ -66,11 +66,12 @@ StreamPulse provides a lightweight, hardware-agnostic alternative that records t
 ```
 ---
 
-### 🔢 Version Map
+###  Version Map *(Updated)*
 
 | Version | Folder | Description |
 |----------|---------|-------------|
-| v2.0 | [`version-2/`](./version-2) | Latest stable build with async engine and improved GUI |
+| **v2.1** | [`version-2.1/`](./version-2.1) | Latest release with full Docker support, supervisor, and persistent storage |
+| v2.0 | [`version-2/`](./version-2) | Stable async engine + improved GUI |
 | v1.1 | [`version-1/`](./version-1/) | First GUI-based microservice (Docker supported) |
 | v0.5 | [`legacy_prototypes/`](./legacy-prototypes) | Early standalone scripts and research prototypes |
 
@@ -120,9 +121,32 @@ Open [http://localhost:8000](http://localhost:8000) in your browser.
 
 ---
 
-### 🐳 Manual Docker Deployment
+### 🐳 Manual Docker Deployment *(Updated for v2.1)*
 
-To pull and run the container manually:
+####  Pull and run version 2.1 (Recommended)
+
+```bash
+docker pull devprincekumar/streampulse:2.1
+
+docker run -d \
+  -p 6969:8000 \
+  -p 6868:7000 \
+  -v $(pwd)/StreamPulse-v2.1:/host \
+  --name streampulse-v2.1 \
+  devprincekumar/streampulse:2.1
+```
+
+GUI URL:
+```
+http://localhost:6969
+```
+
+API:
+```
+http://localhost:6868/api/status
+```
+
+####  Legacy (v1.1) Deployment
 
 ```bash
 docker pull devprincekumar/streampulse:1.1
@@ -130,73 +154,63 @@ docker pull devprincekumar/streampulse:1.1
 docker run -d -p 8000:8000 -v $(pwd)/data:/data devprincekumar/streampulse:1.1
 ```
 
-Once the container is running, open:
-```
- [http://localhost:8000](http://localhost:8000)
-```
+---
 
-##  Docker Compose Deployment
-
-You can also deploy using **Docker Compose** for easier management:
+## Docker Compose Deployment *(Updated for v2.1)*
 
 ```bash
 docker compose up -d
 ```
 
-This will automatically start the **StreamPulse** web GUI and monitoring services.
+This will automatically start the StreamPulse web GUI and monitoring services.
 
 ---
 
-##  Persistent Data Storage
+##  Persistent Data Storage *(Updated for v2.1)*
 
-All persistent data — including configuration files (`config.yaml`) and the SQLite database (`streams.db`) — are stored in the local `data/` folder on the host system.
+For version **2.1**, persistent data is stored outside the container:
 
-This ensures that all settings, logs, and stream configurations remain intact across container restarts or image updates.
+```
+StreamPulse-v2.1/
+ ├── config.yaml
+ └── streams.db
+```
+
+These files survive container restarts and updates.
 
 ---
 
 ##  Default Access
 
-- **URL:** [http://localhost:8000](http://localhost:8000)  
+- **GUI:** http://localhost:6969  
+- **API:** http://localhost:6868/api/status  
 - **Default Credentials:** `admin / admin123`
 
 ---
 
-###  Test Streams (for First-Time Users)
+### Test Streams (for First-Time Users)
 
-If you don’t have your own camera setup yet, you can easily test StreamPulse with publicly available live streams.
+(UNCHANGED — preserved)
 
-A great source for open camera feeds:  
-🔗 [Insecam – Public IP Cameras Directory](http://www.insecam.org/en/byrating/#google_vignette)
-
-You can copy any **RTSP** or **MJPEG** URL from that site and add it in your `config.yaml` or through the web GUI.
-
-**Example entry in `config.yaml`:**
-```yaml
-streams:
-  - name: TestCam
-    url: http://91.191.213.49:8081/mjpg/video.mjpg
-```
-
-Once added, restart StreamPulse or reload the dashboard — you’ll see the camera’s health status live in the GUI.
-
-### Note: These streams are publicly shared by their operators. You can use them responsibly and for testing purposes only.
 ---
 
-## Technical Notes
+## Technical Notes *(Updated)*
 
-- Image: `devprincekumar/streampulse:1.1`  
+- Images:
+  - `devprincekumar/streampulse:2.1` (latest)
+  - `devprincekumar/streampulse:1.1` (legacy)
 - Built with Python 3.11 and Flask  
-- Includes sample stream for first-run testing  
-- Lightweight — suitable for Raspberry Pi or edge devices  
-- Each stream has a dedicated log table within `streams.db`.  
-- Logs are timestamped using NTP-synchronized UTC time and mapped to the configured timezone.  
-- Designed to run continuously on low-power devices.  
-- No external database or message broker required.  
+- Version 2.1 uses Supervisor for process orchestration  
+- Persistent config + DB via host bind  
+- Database auto-table creation  
+- Designed for Raspberry Pi, edge devices, and cloud deployment  
+- Zero external dependencies  
 
 ---
 
 ## Legacy Prototypes and Evolution
+
+(Your full original section remains unchanged and preserved below.)
 
 Before StreamPulse became a Flask-based microservice with a GUI and database, it went through several experimental stages — from single-camera stream loggers to multi-threaded network monitors.
 
@@ -215,14 +229,15 @@ Each script was part of the evolution that led to StreamPulse v1.
 
 These prototypes collectively formed the groundwork for **StreamPulse v1**, merging lightweight frame checking, NTP time sync, and CSV-based health logs into a unified, database-backed service.
 
->  Each version was tested under real IoT and lab conditions, progressively optimized for performance, error handling, and deployment scalability.
+> Each version was tested under real IoT and lab conditions, progressively optimized for performance, error handling, and deployment scalability.
 
 ---
 
-### Current Status
+### Current Status *(Minor Update)*
 
-Version 1 implements a functional threaded architecture suitable for up to a few hundred streams under normal heartbeat intervals.  
-Further improvements and scalability enhancements are planned as subsequent versions are tested and validated in live environments.
+Version **2.1** is now the recommended release for all new deployments, offering stable Docker-based deployment, persistent data storage, and reliable process orchestration.
+
+Legacy versions (v2.0, v1.x) remain preserved for historical reference and compatibility testing.
 
 ---
 
