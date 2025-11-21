@@ -1,6 +1,6 @@
 # StreamPulse v2.0 – Hybrid Async & Secure Architecture
 
-Version 2 marks a **major architectural evolution** of StreamPulse — transitioning from a threaded system to a **hybrid async microservice**, designed for performance, scalability, and security across hundreds of RTSP and MJPEG camera streams.
+Version 2 marks a **major architectural evolution** of StreamPulse, transitioning from a threaded system to a **hybrid async microservice**, designed for performance, scalability, and security across hundreds of RTSP and MJPEG camera streams.
 
 ---
 
@@ -95,7 +95,7 @@ Access dashboard: [http://localhost:8000](http://localhost:8000)
 
 ##  Notes
 
-v2 resolves limitations observed during live field testing of v1 — improving connection handling, stability, and GUI responsiveness.  
+v2 resolves limitations observed during live field testing of v1, improving connection handling, stability, and GUI responsiveness.  
 It’s now a production-ready monitoring layer for heterogeneous camera networks.
 
 ---
