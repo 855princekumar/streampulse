@@ -31,7 +31,7 @@ As the network scaled to include numerous standalone IP and MotionEye cameras, m
 - Network pings could not confirm if a stream was actually functional.  
 - Commercial NVR solutions were resource-heavy and unsuitable for mixed hardware.
 
-StreamPulse provides a lightweight, hardware-agnostic alternative that records the operational state of each stream as a “heartbeat” with accurate timestamps (NTP-synchronized). This allows technical teams to identify failures—power, network, or configuration—without manual inspection.
+StreamPulse provides a lightweight, hardware-agnostic alternative that records the operational state of each stream as a “heartbeat” with accurate timestamps (NTP-synchronized). This allows technical teams to identify failures in power, network, or configuration, without manual inspection.
 
 ---
 
