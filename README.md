@@ -212,7 +212,7 @@ These files survive container restarts and updates.
 
 (Your full original section remains unchanged and preserved below.)
 
-Before StreamPulse became a Flask-based microservice with a GUI and database, it went through several experimental stages — from single-camera stream loggers to multi-threaded network monitors.
+Before StreamPulse became a Flask-based microservice with a GUI and database, it went through several experimental stages, from single-camera stream loggers to multi-threaded network monitors.
 
 These early scripts were the foundation for understanding stream behavior, latency, and reliability under different protocols (RTSP, MJPEG) and hardware setups (NVRs, MotionEye, Raspberry Pi nodes).
 
@@ -222,7 +222,7 @@ Each script was part of the evolution that led to StreamPulse v1.
 | File | Description | Key Learnings |
 |------|--------------|---------------|
 | **1-working-rtsp-log-(cv).py** | Early OpenCV-based RTSP logger that captured frames and stored timestamps to CSV. | Validated minimal RTSP connection handling and frame fetch consistency. |
-| **2-me-stream-receive.py** | MotionEye MJPEG receiver script — saved short video chunks while logging CPU, memory, and network usage. | Tested continuous HTTP-based MJPEG fetching and real-time system monitoring. |
+| **2-me-stream-receive.py** | MotionEye MJPEG receiver script, saved short video chunks while logging CPU, memory, and network usage. | Tested continuous HTTP-based MJPEG fetching and real-time system monitoring. |
 | **3-rtsp_sender_logger.py** | RTSP sender prototype using FFmpeg to stream video input with timestamp overlay and NTP sync. | Helped understand stream generation, encoding, and network bitrate behavior. |
 | **3-rtsp_receiver_logger.py** | Receiver-side analytics tool that calculated latency, jitter, and frame consistency using NTP and CSV logs. | Introduced frame-level analysis and time-sync verification. |
 | **4-rtsp_heartbest.py** | Multi-threaded RTSP heartbeat system for several cameras at once, storing logs per camera. | Core inspiration for StreamPulse’s parallel stream checking and logging architecture. |
