@@ -210,8 +210,6 @@ These files survive container restarts and updates.
 
 ## Legacy Prototypes and Evolution
 
-(Your full original section remains unchanged and preserved below.)
-
 Before StreamPulse became a Flask-based microservice with a GUI and database, it went through several experimental stages, from single-camera stream loggers to multi-threaded network monitors.
 
 These early scripts were the foundation for understanding stream behavior, latency, and reliability under different protocols (RTSP, MJPEG) and hardware setups (NVRs, MotionEye, Raspberry Pi nodes).
