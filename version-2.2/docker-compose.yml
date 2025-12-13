@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  streampulse:
+    image: devprincekumar/streampulse:2.2
+    container_name: StreamPulse-v2.2
+    restart: unless-stopped
+
+    ports:
+      - "6969:8000"   # Web GUI
+      - "6868:7000"   # Monitor API
+
+    volumes:
+      - ./StreamPulse-v2.2:/host

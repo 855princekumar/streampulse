@@ -1,0 +1,25 @@
+# --- mqtt settings (add this block to your existing config.yaml) ---
+mqtt:
+  enabled: false                 # toggle: when true, service will start publishing
+  host: "broker.hivemq.com"
+  port: 1883                     # TCP port
+  ws_port: 8000                  # Websocket port (non-TLS)
+  tls_port: 8883                 # TLS TCP port
+  tls_ws_port: 8884              # TLS Websocket port
+  use_tls: false                 # true -> connect with TLS
+  use_websocket: false           # true -> connect via websockets
+  username: null                 # optional; set if using auth-enabled broker
+  password: null                 # optional
+  client_id: null                # optional mqtt client id
+  topic: "stream_monitor/status" # default topic (can be changed by user)
+  qos: 0
+  retain: false
+  interval_seconds: 10           # how often to request the API (min 5)
+  api_status_url: "http://localhost:7000/api/status"  # change to 6969 if your monitor uses that port
+
+# --- existing config.yaml content below ---
+heartbeat_seconds: 20
+timezone: Asia/Calcutta
+streams:
+- name: Testing streams
+  url: http://158.58.130.148/mjpg/video.mjpg
