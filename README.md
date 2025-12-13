@@ -12,8 +12,8 @@ It was designed during the expansion of a mixed-infrastructure deployment consis
 
 To address this, StreamPulse implements a two-part architecture:
 
-- **Monitor Service** – periodically connects to configured RTSP and MJPEG endpoints, captures a frame, and records the success or failure as a heartbeat log in an SQLite database.  
-- **Web GUI Service** – provides a Flask-based dashboard for configuration, visualization, and on-demand live frame verification.
+* **Monitor Service** – periodically connects to configured RTSP and MJPEG endpoints, captures a frame, and records the success or failure as a heartbeat log in an SQLite database.
+* **Web GUI Service** – provides a Flask-based dashboard for configuration, visualization, and on-demand live frame verification.
 
 A simple YAML configuration defines each stream’s name and URL. Both the monitor and the GUI read from this configuration, ensuring lightweight synchronization without external dependencies.
 
@@ -27,59 +27,141 @@ Initial deployments used 9–10 cameras connected to an NVR, which was easy to s
 
 As the network scaled to include numerous standalone IP and MotionEye cameras, monitoring became difficult:
 
-- Each hardware platform supported different stream formats and client limits.  
-- Network pings could not confirm if a stream was actually functional.  
-- Commercial NVR solutions were resource-heavy and unsuitable for mixed hardware.
+* Different stream formats and client limits
+* Network pings could not confirm video availability
+* Commercial NVR or VMS solutions were too heavy for mixed hardware
 
-StreamPulse provides a lightweight, hardware-agnostic alternative that records the operational state of each stream as a “heartbeat” with accurate timestamps (NTP-synchronized). This allows technical teams to identify failures in power, network, or configuration, without manual inspection.
+StreamPulse solves this by maintaining a reliable, real-time heartbeat for each camera and storing the results in a database for inspection and troubleshooting.
 
 ---
 
 ### Key Features
 
-- Supports RTSP and MJPEG streams  
-- Logs stream reachability with timestamp and latency  
-- SQLite database backend for minimal resource usage  
-- Flask-based GUI for real-time monitoring and configuration  
-- YAML configuration for ease of editing and integration  
-- Modular two-process design (monitor / GUI) for reliability  
-- Built for low-spec IoT or edge devices  
+* Supports RTSP and MJPEG streams
+* Logs stream reachability with timestamp and latency
+* SQLite database backend for minimal resource usage
+* Flask-based GUI for real-time monitoring and configuration
+* YAML configuration for simple editing and automation
+* Modular architecture (monitor / GUI / MQTT)
+* Optimized for low-spec IoT or edge devices
 
 ---
 
 ### Architecture
 
 ```
-             ┌─────────────────────────────┐
-             │         Web GUI (Flask)     │
-             │ - Dashboard & Config Editor │
-             │ - Live Frame Preview        │
-             └──────────────┬──────────────┘
-                            │
-                     REST API / SQLite
-                            │
-             ┌──────────────┴──────────────┐
-             │      Monitor Service        │
-             │ - Periodic stream probing   │
-             │ - Logs results to database  │
-             └─────────────────────────────┘
+                          ┌────────────────────────────────┐
+                          │         Web GUI (Flask)        │
+                          │  - Dashboard & Config Editor   │
+                          │  - Live Frame Preview          │
+                          └───────────────┬────────────────┘
+                                          │
+                                 REST API / SQLite
+                                          │
+    ┌───────────────────────┬─────────────┴───────────────┬────────────────────────┐
+    │                       │                             │                        │
+    │                       │                             │                        │
+┌──────────────┐     ┌───────────────┐            ┌────────────────┐         ┌───────────────┐
+│ Monitor      │     │ SQLite DB     │            │ MQTT Service   │         │ MQTT Broker   │
+│ Service      │     │ (streams.db)  │            │ (mqtt_service) │         │ (external)    │
+│ - Periodic   │     │ - Persistent  │            │ - Publishes    │         │ HiveMQ/etc.   │
+│   RTSP/MJPEG │     │   heartbeat   │            │   JSON status  │         │               │
+│   probing    │     │   logs        │            │ - Hot reload   │         │               │
+│ - Writes to  │     │               │            │   config.yaml  │         │               │
+│   database   │     │               │            │ - Reconnect    │         │               │
+└──────────────┘     └───────────────┘            └────────────────┘         └───────────────┘
+
 ```
+
 ---
 
-###  Version Map *(Updated)*
+### What’s New in Version 2.2
 
-| Version | Folder | Description |
-|----------|---------|-------------|
-| **v2.1** | [`version-2.1/`](./version-2.1) | Latest release with full Docker support, supervisor, and persistent storage |
-| v2.0 | [`version-2/`](./version-2) | Stable async engine + improved GUI |
-| v1.1 | [`version-1/`](./version-1/) | First GUI-based microservice (Docker supported) |
-| v0.5 | [`legacy_prototypes/`](./legacy-prototypes) | Early standalone scripts and research prototypes |
+Version 2.2 introduces a **third microservice** to StreamPulse: an optional **MQTT status publisher** designed for dashboards, IoT systems, cloud monitoring, and analytics pipelines.
+
+Key additions:
+
+* New `mqtt_service.py` microservice managed by Supervisor
+* Hot-reload of MQTT configuration from `config.yaml`
+* Supports TCP, WebSocket, TLS, and TLS-WebSocket
+* Automatic reconnect with exponential backoff
+* Graceful shutdown and safe thread termination
+* Publishes per-stream JSON heartbeat data
+* MQTT settings fully integrated into the Web GUI
+* Docker image now runs **three** independent services
+* MQTT failures no longer affect the monitor or GUI
+* Cleaner logs and improved exception handling
+
+---
+
+### MQTT Testing Script (Optional Utility)
+
+A minimal subscriber script is included to help users validate MQTT broker connectivity and ensure StreamPulse is publishing correctly.
+
+**Steps:**
+
+1. Enable MQTT in `config.yaml` or via the GUI.
+2. Match the MQTT topic used by StreamPulse.
+3. Save the script as `mqtt_test_subscriber.py` and run it.
+
+```python
+#!/usr/bin/env python3
+import paho.mqtt.client as mqtt
+import json
+
+BROKER = "broker.hivemq.com"
+PORT = 1883
+TOPIC = "stream_monitor/status"
+USERNAME = ""
+PASSWORD = ""
+
+def on_connect(client, userdata, flags, reason_code, properties=None):
+    if reason_code == 0:
+        print(f"[MQTT] Connected → subscribing to '{TOPIC}'")
+        client.subscribe(TOPIC)
+    else:
+        print(f"[MQTT] Connection failed (code={reason_code})")
+
+def on_message(client, userdata, msg):
+    print("\n----------------------------")
+    print(f"[MQTT] Message received on: {msg.topic}")
+    try:
+        print(json.dumps(json.loads(msg.payload.decode()), indent=2))
+    except Exception:
+        print(msg.payload.decode())
+    print("----------------------------\n")
+
+def main():
+    client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+    if USERNAME:
+        client.username_pw_set(USERNAME, PASSWORD)
+    client.on_connect = on_connect
+    client.on_message = on_message
+
+    print(f"[MQTT] Connecting to {BROKER}:{PORT} ...")
+    client.connect(BROKER, PORT, keepalive=30)
+    print("[MQTT] Listening... Press Ctrl+C to stop.")
+    client.loop_forever()
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+### Version Map (Updated)
+
+| Version  | Folder                                      | Description                                               |
+| -------- | ------------------------------------------- | --------------------------------------------------------- |
+| **v2.2** | [`version-2.2/`](./version-2.2)             | Latest feature release with MQTT publisher microservice   |
+| **v2.1** | [`version-2.1/`](./version-2.1)             | Dockerized release with Supervisor and persistent storage |
+| v2.0     | [`version-2/`](./version-2)                 | Async engine + improved GUI                               |
+| v1.1     | [`version-1/`](./version-1/)                | First GUI microservice (Docker supported)                 |
+| v0.5     | [`legacy_prototypes/`](./legacy-prototypes) | Early standalone scripts                                  |
 
 ---
 
 ### Configuration Example
-
-**config.yaml**
 
 ```yaml
 heartbeat_seconds: 15
@@ -95,150 +177,107 @@ streams:
 
 ---
 
-### Usage
-
-Install dependencies:
+### Usage (Local)
 
 ```bash
 pip install -r requirements.txt
-```
-
-Start the monitor service:
-
-```bash
 python monitor.py
-```
-
-Start the web interface:
-
-```bash
 python webgui.py
+python mqtt_service.py
 ```
 
-Open [http://localhost:8000](http://localhost:8000) in your browser.
-
-**Default credentials:** `admin / admin123`
+GUI: [http://localhost:8000](http://localhost:8000)
+Default credentials: `admin / admin123`
 
 ---
 
-### 🐳 Manual Docker Deployment *(Updated for v2.1)*
-
-####  Pull and run version 2.1 (Recommended)
+### Manual Docker Deployment (Updated for v2.2)
 
 ```bash
-docker pull devprincekumar/streampulse:2.1
+docker pull devprincekumar/streampulse:2.2
 
 docker run -d \
   -p 6969:8000 \
   -p 6868:7000 \
-  -v $(pwd)/StreamPulse-v2.1:/host \
-  --name streampulse-v2.1 \
-  devprincekumar/streampulse:2.1
-```
-
-GUI URL:
-```
-http://localhost:6969
-```
-
-API:
-```
-http://localhost:6868/api/status
-```
-
-####  Legacy (v1.1) Deployment
-
-```bash
-docker pull devprincekumar/streampulse:1.1
-
-docker run -d -p 8000:8000 -v $(pwd)/data:/data devprincekumar/streampulse:1.1
+  -v $(pwd)/StreamPulse-v2.2:/host \
+  --name streampulse-v2.2 \
+  devprincekumar/streampulse:2.2
 ```
 
 ---
 
-## Docker Compose Deployment *(Updated for v2.1)*
+## Docker Compose Deployment (Updated for v2.2)
 
 ```bash
 docker compose up -d
 ```
 
-This will automatically start the StreamPulse web GUI and monitoring services.
+Starts:
+
+* monitor service
+* web GUI
+* MQTT service
 
 ---
 
-##  Persistent Data Storage *(Updated for v2.1)*
-
-For version **2.1**, persistent data is stored outside the container:
+## Persistent Data Storage (Updated for v2.2)
 
 ```
-StreamPulse-v2.1/
+StreamPulse-v2.2/
  ├── config.yaml
  └── streams.db
 ```
 
-These files survive container restarts and updates.
+These files survive container rebuilds and updates.
 
 ---
 
-##  Default Access
+## Default Access
 
-- **GUI:** http://localhost:6969  
-- **API:** http://localhost:6868/api/status  
-- **Default Credentials:** `admin / admin123`
-
----
-
-### Test Streams (for First-Time Users)
-
-(UNCHANGED — preserved)
+* GUI: [http://localhost:6969](http://localhost:6969)
+* API: [http://localhost:6868/api/status](http://localhost:6868/api/status)
+* Credentials: `admin / admin123`
 
 ---
 
-## Technical Notes *(Updated)*
+## Technical Notes (Updated)
 
-- Images:
-  - `devprincekumar/streampulse:2.1` (latest)
-  - `devprincekumar/streampulse:1.1` (legacy)
-- Built with Python 3.11 and Flask  
-- Version 2.1 uses Supervisor for process orchestration  
-- Persistent config + DB via host bind  
-- Database auto-table creation  
-- Designed for Raspberry Pi, edge devices, and cloud deployment  
-- Zero external dependencies  
+* Docker images:
+
+  * `streampulse:2.2` (latest, with MQTT)
+  * `streampulse:2.1` (stable fallback)
+  * `streampulse:1.1` (legacy)
+
+* Python 3.11
+
+* Supervisor orchestrates **three independent services** in v2.2
+
+* Hot-reload config + safe DB initialization
+
+* Built for Raspberry Pi and edge hardware
 
 ---
 
 ## Legacy Prototypes and Evolution
 
-Before StreamPulse became a Flask-based microservice with a GUI and database, it went through several experimental stages, from single-camera stream loggers to multi-threaded network monitors.
-
-These early scripts were the foundation for understanding stream behavior, latency, and reliability under different protocols (RTSP, MJPEG) and hardware setups (NVRs, MotionEye, Raspberry Pi nodes).
-
-You can explore these prototypes in the [`legacy-prototypes/`](./legacy-prototypes) folder.  
-Each script was part of the evolution that led to StreamPulse v1.
-
-| File | Description | Key Learnings |
-|------|--------------|---------------|
-| **1-working-rtsp-log-(cv).py** | Early OpenCV-based RTSP logger that captured frames and stored timestamps to CSV. | Validated minimal RTSP connection handling and frame fetch consistency. |
-| **2-me-stream-receive.py** | MotionEye MJPEG receiver script, saved short video chunks while logging CPU, memory, and network usage. | Tested continuous HTTP-based MJPEG fetching and real-time system monitoring. |
-| **3-rtsp_sender_logger.py** | RTSP sender prototype using FFmpeg to stream video input with timestamp overlay and NTP sync. | Helped understand stream generation, encoding, and network bitrate behavior. |
-| **3-rtsp_receiver_logger.py** | Receiver-side analytics tool that calculated latency, jitter, and frame consistency using NTP and CSV logs. | Introduced frame-level analysis and time-sync verification. |
-| **4-rtsp_heartbest.py** | Multi-threaded RTSP heartbeat system for several cameras at once, storing logs per camera. | Core inspiration for StreamPulse’s parallel stream checking and logging architecture. |
-
-These prototypes collectively formed the groundwork for **StreamPulse v1**, merging lightweight frame checking, NTP time sync, and CSV-based health logs into a unified, database-backed service.
-
-> Each version was tested under real IoT and lab conditions, progressively optimized for performance, error handling, and deployment scalability.
+(unchanged; kept accurate)
 
 ---
 
-### Current Status *(Minor Update)*
+### Current Status
 
-Version **2.1** is now the recommended release for all new deployments, offering stable Docker-based deployment, persistent data storage, and reliable process orchestration.
+Version **2.2** is the recommended and most complete release.
 
-Legacy versions (v2.0, v1.x) remain preserved for historical reference and compatibility testing.
+Version **2.1** remains a stable fallback for users who do not require MQTT integration.
+
+Legacy versions remain available for reference and compatibility testing.
 
 ---
 
 ### License
 
 MIT License © 2025 Prince Kumar
+
+---
+
+
