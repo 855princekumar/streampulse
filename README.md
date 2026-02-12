@@ -4,6 +4,18 @@
 
 <img width="1248" height="832" alt="banner" src="https://github.com/user-attachments/assets/337f7b48-75aa-40e5-840d-369170e113ac" />
 
+<!-- Badges -->
+![Stream Processing](https://img.shields.io/badge/Type-Stream%20Processing-6e40c9?style=flat-square&logo=apachespark)
+![Python](https://img.shields.io/badge/Backend-Python-3776ab?style=flat-square&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?style=flat-square&logo=fastapi)
+![Docker](https://img.shields.io/badge/Container-Docker-2496ed?style=flat-square&logo=docker)
+![Linux](https://img.shields.io/badge/Runtime-Linux-fcc624?style=flat-square&logo=linux&logoColor=black)
+![Architecture](https://img.shields.io/badge/Architecture-Event%20Driven-ff6f00?style=flat-square)
+![Observability](https://img.shields.io/badge/Focus-Observability-8a2be2?style=flat-square&logo=prometheus)
+![Deployment](https://img.shields.io/badge/Deployment-Cloud%20Ready-326ce5?style=flat-square&logo=kubernetes)
+![Status](https://img.shields.io/badge/Status-Actively%20Maintained-success?style=flat-square)
+
+
 ### Overview
 
 **StreamPulse** is a minimal Python-based microservice for monitoring the operational health of heterogeneous IP camera networks.
