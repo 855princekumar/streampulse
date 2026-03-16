@@ -1,0 +1,5 @@
+heartbeat_seconds: 20
+timezone: Asia/Calcutta
+streams:
+- name: Testing streams
+  url: http://158.58.130.148/mjpg/video.mjpg
