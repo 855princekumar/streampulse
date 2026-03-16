@@ -1,3 +1,4 @@
+
 # StreamPulse
 
 ## Lightweight Camera Stream Health Monitoring Microservice
@@ -5,16 +6,19 @@
 <img width="1248" height="832" alt="banner" src="https://github.com/user-attachments/assets/337f7b48-75aa-40e5-840d-369170e113ac" />
 
 <!-- Badges -->
-![Stream Processing](https://img.shields.io/badge/Type-Stream%20Processing-6e40c9?style=flat-square&logo=apachespark)
-![Python](https://img.shields.io/badge/Backend-Python-3776ab?style=flat-square&logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?style=flat-square&logo=fastapi)
-![Docker](https://img.shields.io/badge/Container-Docker-2496ed?style=flat-square&logo=docker)
-![Linux](https://img.shields.io/badge/Runtime-Linux-fcc624?style=flat-square&logo=linux&logoColor=black)
+
+![Stream Processing](https://img.shields.io/badge/Type-Stream%20Processing-6e40c9?style=flat-square\&logo=apachespark)
+![Python](https://img.shields.io/badge/Backend-Python-3776ab?style=flat-square\&logo=python\&logoColor=white)
+![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?style=flat-square\&logo=fastapi)
+![Docker](https://img.shields.io/badge/Container-Docker-2496ed?style=flat-square\&logo=docker)
+![Linux](https://img.shields.io/badge/Runtime-Linux-fcc624?style=flat-square\&logo=linux\&logoColor=black)
 ![Architecture](https://img.shields.io/badge/Architecture-Event%20Driven-ff6f00?style=flat-square)
-![Observability](https://img.shields.io/badge/Focus-Observability-8a2be2?style=flat-square&logo=prometheus)
-![Deployment](https://img.shields.io/badge/Deployment-Cloud%20Ready-326ce5?style=flat-square&logo=kubernetes)
+![Observability](https://img.shields.io/badge/Focus-Observability-8a2be2?style=flat-square\&logo=prometheus)
+![Prometheus](https://img.shields.io/badge/Monitoring-Prometheus-orange?style=flat-square\&logo=prometheus)
+![Deployment](https://img.shields.io/badge/Deployment-Cloud%20Ready-326ce5?style=flat-square\&logo=kubernetes)
 ![Status](https://img.shields.io/badge/Status-Actively%20Maintained-success?style=flat-square)
 
+---
 
 ### Overview
 
@@ -24,8 +28,8 @@ It was designed during the expansion of a mixed-infrastructure deployment consis
 
 To address this, StreamPulse implements a two-part architecture:
 
-* **Monitor Service** – periodically connects to configured RTSP and MJPEG endpoints, captures a frame, and records the success or failure as a heartbeat log in an SQLite database.
-* **Web GUI Service** – provides a Flask-based dashboard for configuration, visualization, and on-demand live frame verification.
+* **Monitor Service** - periodically connects to configured RTSP and MJPEG endpoints, captures a frame, and records the success or failure as a heartbeat log in an SQLite database.
+* **Web GUI Service** - provides a Flask-based dashboard for configuration, visualization, and on-demand live frame verification.
 
 A simple YAML configuration defines each stream’s name and URL. Both the monitor and the GUI read from this configuration, ensuring lightweight synchronization without external dependencies.
 
@@ -35,7 +39,7 @@ SQLite is used as the database to minimize hardware requirements and enable depl
 
 ### Problem Statement
 
-Initial deployments used 9–10 cameras connected to an NVR, which was easy to supervise.
+Initial deployments used 9-10 cameras connected to an NVR, which was easy to supervise.
 
 As the network scaled to include numerous standalone IP and MotionEye cameras, monitoring became difficult:
 
@@ -55,6 +59,7 @@ StreamPulse solves this by maintaining a reliable, real-time heartbeat for each 
 * Flask-based GUI for real-time monitoring and configuration
 * YAML configuration for simple editing and automation
 * Modular architecture (monitor / GUI / MQTT)
+* Prometheus metrics endpoint for SLA and uptime monitoring
 * Optimized for low-spec IoT or edge devices
 
 ---
@@ -82,7 +87,6 @@ StreamPulse solves this by maintaining a reliable, real-time heartbeat for each 
 │ - Writes to  │     │               │            │   config.yaml  │         │               │
 │   database   │     │               │            │ - Reconnect    │         │               │
 └──────────────┘     └───────────────┘            └────────────────┘         └───────────────┘
-
 ```
 
 ---
@@ -103,6 +107,46 @@ Key additions:
 * Docker image now runs **three** independent services
 * MQTT failures no longer affect the monitor or GUI
 * Cleaner logs and improved exception handling
+
+---
+
+### Observability Release: Version 2.1.1 (SLA Monitoring)
+
+Version **2.1.1** introduces an **observability-focused deployment** designed for infrastructure monitoring stacks such as **Prometheus + Grafana**.
+
+Unlike v2.2, this version **does not include MQTT publishing**, keeping the deployment minimal while exposing structured monitoring metrics.
+
+New capabilities include:
+
+* **Prometheus metrics endpoint** (`/metrics`)
+* **System-wide SLA monitoring**
+* **Per-stream availability metrics**
+* **REST API status endpoint**
+* **Grafana-ready observability integration**
+
+Example metrics exposed:
+
+```
+stream_up
+stream_latency_ms
+stream_last_seen_age_seconds
+stream_uptime_streak_seconds
+system_total_streams
+system_ok_streams
+system_fail_streams
+system_sla_ratio_30d
+```
+
+Monitoring endpoints:
+
+```
+http://<host>:6969/api/status
+http://<host>:6969/metrics
+```
+
+For detailed documentation see:
+
+➡ **[`version-2.1.1/`](./version-2.1.1%20%28SLA-query-endpoint%29)**
 
 ---
 
@@ -163,14 +207,14 @@ if __name__ == "__main__":
 
 ### Version Map (Updated)
 
-| Version  | Folder                                      | Description                                               |
-| -------- | ------------------------------------------- | --------------------------------------------------------- |
-| **v2.2** | [`version-2.2/`](./version-2.2)             | Latest feature release with MQTT publisher microservice   |
-| **v2.1** | [`version-2.1/`](./version-2.1)             | Dockerized release with Supervisor and persistent storage |
-| v2.0     | [`version-2/`](./version-2)                 | Async engine + improved GUI                               |
-| v1.1     | [`version-1/`](./version-1/)                | First GUI microservice (Docker supported)                 |
-| v0.5     | [`legacy_prototypes/`](./legacy-prototypes) | Early standalone scripts                                  |
-
+| Version  | Folder                                      | Description |
+|---------|----------------------------------------------|-------------|
+| **v2.2** | [`version-2.2/`](./version-2.2)             | MQTT publishing microservice |
+| **v2.1.1** | [`version-2.1.1 (SLA-query-endpoint)/`](./version-2.1.1%20(SLA-query-endpoint)) | Prometheus metrics + system SLA monitoring |
+| **v2.1** | [`version-2.1/`](./version-2.1)             | Dockerized release with Supervisor |
+| v2.0     | [`version-2/`](./version-2)                 | Async engine + improved GUI |
+| v1.1     | [`version-1/`](./version-1/)                | First GUI microservice |
+| v0.5     | [`legacy_prototypes/`](./legacy-prototypes) | Early standalone scripts |
 ---
 
 ### Configuration Example
@@ -254,11 +298,15 @@ These files survive container rebuilds and updates.
 
 ## Technical Notes (Updated)
 
-* Docker images:
+Docker images:
 
-  * `streampulse:2.2` (latest, with MQTT)
-  * `streampulse:2.1` (stable fallback)
-  * `streampulse:1.1` (legacy)
+* `devprincekumar/streampulse:2.2` - Full feature release (MQTT + GUI + monitor)
+
+* `devprincekumar/streampulse:2.1.1-sla-ready` - Prometheus metrics + SLA monitoring
+
+* `devprincekumar/streampulse:2.1` - Stable fallback
+
+* `devprincekumar/streampulse:1.1` - Legacy release
 
 * Python 3.11
 
@@ -278,7 +326,22 @@ These files survive container rebuilds and updates.
 
 ### Current Status
 
-Version **2.2** is the recommended and most complete release.
+Two primary production releases currently exist:
+
+**v2.2 - Feature Release**
+
+* MQTT event publishing
+* dashboard + monitoring
+* integration with IoT messaging pipelines
+
+**v2.1.1 - Observability Release**
+
+* Prometheus metrics endpoint
+* system-wide SLA monitoring
+* Grafana-compatible metrics
+* minimal deployment footprint
+
+Both releases are actively maintained depending on deployment requirements.
 
 Version **2.1** remains a stable fallback for users who do not require MQTT integration.
 
