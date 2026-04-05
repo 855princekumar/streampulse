@@ -49,6 +49,16 @@ As the network scaled to include numerous standalone IP and MotionEye cameras, m
 
 StreamPulse solves this by maintaining a reliable, real-time heartbeat for each camera and storing the results in a database for inspection and troubleshooting.
 
+## Star History
+
+<a href="https://www.star-history.com/?repos=855princekumar/streampulse&type=date&legend=top-left">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=855princekumar/streampulse&type=date&theme=dark&legend=top-left" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=855princekumar/streampulse&type=date&legend=top-left" />
+    <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=855princekumar/streampulse&type=date&legend=top-left" />
+  </picture>
+</a>
+
 ---
 
 ### Key Features
